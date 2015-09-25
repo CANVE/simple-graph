@@ -8,7 +8,7 @@ object BuildSettings {
     version := "0.0.1",
     scalacOptions ++= Seq("-deprecation"),
     scalaVersion := "2.11.7",
-    crossScalaVersions := Seq("2.10.4", "2.11.6"),
+    crossScalaVersions := Seq("2.10.4", "2.11.5", "2.11.6", "2.11.7"),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
     libraryDependencies ++= Seq("com.lihaoyi" %% "utest" % "0.3.1" % "test"),

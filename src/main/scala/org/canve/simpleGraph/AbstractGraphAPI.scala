@@ -5,13 +5,13 @@ package org.canve.simpleGraph
  */
 abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]  {
       
-  def addNode(node: Vertex): AbstractGraph[ID, Vertex, Edge] 
+  def += (vertex: Vertex): AbstractGraph[ID, Vertex, Edge] 
   
-  def getNode(id: ID): Option[Vertex]
+  def += (edge: Edge): AbstractGraph[ID, Vertex, Edge] 
+      
+  def vertex(id: ID): Option[Vertex]
   
-  def addEdge(edge: Edge): AbstractGraph[ID, Vertex, Edge] 
-  
-  def getNodeEdges(id: ID): Set[Edge] 
+  def vertexEdges(id: ID): Set[Edge] 
   
   //def getEdges(node1: Int, node2: Int): Option[List[EdgeType]]
       
@@ -34,4 +34,8 @@ trait AbstractEdge[ID] {
   val id2: ID
 }
 
-case class SimpleGraphException(errorText: String) extends Exception
+abstract class PackageException(errorText: String) extends Exception 
+
+case class SimpleGraphDuplicate(errorText: String) extends PackageException(errorText: String)
+
+case class SimpleGraphInvalidEdge(errorText: String) extends PackageException(errorText: String)
