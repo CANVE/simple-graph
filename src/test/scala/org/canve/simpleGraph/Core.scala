@@ -3,16 +3,7 @@ import utest._
 import utest.ExecutionContext.RunNow
 import scala.util.{Try, Success, Failure}
 
-object Core extends TestSuite {
-  
-  val tests = TestSuite {
-    "Core" - new CoreTest  
-  }  
-  
-  val results = tests.run()
-}
-
-class CoreTest {
+class Core {
   
   case class Node(
     id: Int, 
@@ -64,6 +55,7 @@ class CoreTest {
   graph.+=(Relation(3, "relates back to", 5))
   assert(graph.vertexEdges(3).size == 4)
 
+  graph += Relation(5, "relates to", 5) // verifies relation can point to itself
   
   assert(Try(graph.+=(Relation(6, "relates back to", 5))).isFailure)
   

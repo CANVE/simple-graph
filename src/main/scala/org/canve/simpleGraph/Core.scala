@@ -12,13 +12,20 @@ import collection.mutable.HashMap
 class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]] 
   extends AbstractGraph[ID, Vertex, Edge] {
 
-  private val vertexIndex      = new HashMap[ID, Vertex]   
-  private val edgeIndex        = new UnidirectionalEdgeIndex
-  private val reverseEdgeIndex = new UnidirectionalEdgeIndex
+  private val vertexIndex    = new HashMap[ID, Vertex]   
+  private val edgeIndex      = new UnidirectionalEdgeIndex
+  private val reverseEdgeIndex = new UnidirectionalEdgeIndex 
   
-  // utility class for an edge index
+  /*
+   * Single-direction edge index 
+   */
   private class UnidirectionalEdgeIndex {
-    val index = new HashMap[ID, Set[Edge]]
+    
+    private val index = new HashMap[ID, Set[Edge]]
+
+    private[SimpleGraph] def iterator = index.iterator
+    
+    def vertexEdges(id: ID): Option[Set[Edge]] = index.get(id)
     
     def addEdgeToUnidirectionalIndex(key: ID, edge: Edge) = {
       index.get(key) match {
@@ -30,19 +37,17 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
           }
         case None      => index.put(key, Set(edge))
       }
-    }
-    
-    def vertexEdges(id: ID): Option[Set[Edge]] = index.get(id)  
+    }   
   }
 
   /*
    * public methods
    */
-  
+
   def += (vertex: Vertex): SimpleGraph[ID, Vertex, Edge] = {    
     vertexIndex.get(vertex.id) match {      
       case Some(vertex) => throw SimpleGraphDuplicate("node with id $id already exists in the graph")
-      case None => vertexIndex += ((vertex.id, vertex))
+      case None => vertexIndex += ((vertex.id, vertex)) // TODO: switch to put?
     }
     this
   }
@@ -63,6 +68,9 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
     edgeIndex.vertexEdges(id).getOrElse(Set()) ++ 
     reverseEdgeIndex.vertexEdges(id).getOrElse(Set())
   }    
+  
+  def vertexIterator: Iterator[(ID, Vertex)]    = vertexIndex.iterator
+  def EdgeIterator:   Iterator[(ID, Set[Edge])] = edgeIndex.iterator
 }
 
 /*
@@ -71,8 +79,8 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
 object SimpleGraph {
   
   // code credit: http://stackoverflow.com/questions/32768816/bypassing-sets-invariance-in-scala/32769068#32769068
-  def apply[ID, Vertex <: AbstractVertex[ID], EDGE <: AbstractEdge[ID]]
-           (vertices: Set[Vertex], edges: Set[EDGE]) = {
+  def apply[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
+           (vertices: Set[Vertex], edges: Set[Edge]) = {
     
     val simpleGraph = new SimpleGraph[ID, AbstractVertex[ID], AbstractEdge[ID]]
     vertices.foreach(simpleGraph +=)
