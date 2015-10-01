@@ -59,4 +59,6 @@ class Core {
   
   assert(Try(graph.+=(Relation(6, "relates back to", 5))).isFailure)
   
+  assert(graph.vertexIterator ne graph.vertexIterator) // verifies vertexIterator returns new iterator on each call 
+ 
 }

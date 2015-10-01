@@ -1,23 +1,10 @@
 package org.canve.simpleGraph
 
-abstract trait Abstract
-trait A extends Abstract
-trait B extends Abstract
-
-class AA extends A
-class BB extends B
-
-object NoCompile{
-  def foo(s: Abstract) = s match {
-    case _ : A =>
-    case _ : B =>
-  }
-}
-
 /*
  * API definition
  */
-abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]  {
+abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
+  extends ExtraGraphAPI[ID, Vertex, Edge] {
       
   def += (vertex: Vertex): AbstractGraph[ID, Vertex, Edge] 
   
@@ -27,21 +14,26 @@ abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractE
   
   def vertexEdges(id: ID): Set[Edge] 
   
-  def vertexIterator: Iterator[(ID, Vertex)] 
+  def vertexEdgePeer(id: ID, edge: Edge): ID
   
-  def EdgeIterator:   Iterator[(ID, Set[Edge])]
+  def vertexIterator: Iterator[(ID, Vertex)] // returns a new iterator every time called
   
   def += (inputs: Addable*): AbstractGraph[ID, Vertex, Edge] = {
     inputs.foreach(i => i match {
       case v : AbstractVertex[ID] => += (v.asInstanceOf[Vertex])
       case e : AbstractEdge[ID]   => += (e.asInstanceOf[Edge])
     })
-    this.vertexIterator.foreach(println)
-    println("tests run")
     this
   } 
 }
 
+abstract trait ExtraGraphAPI[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]] {
+  self: AbstractGraph[ID, Vertex, Edge] => 
+
+  def vertexEdgePeer(id: ID, edge: Edge): ID 
+
+  def vertexEdgePeers(id: ID): Set[ID] 
+}
 
 sealed abstract trait Addable
 
@@ -60,10 +52,3 @@ abstract trait AbstractEdge[ID] extends Addable {
   val id2: ID
 }
 
-/* package exceptions */
-
-abstract class PackageException(errorText: String) extends Exception 
-
-case class SimpleGraphDuplicate(errorText: String) extends PackageException(errorText: String)
-
-case class SimpleGraphInvalidEdge(errorText: String) extends PackageException(errorText: String)

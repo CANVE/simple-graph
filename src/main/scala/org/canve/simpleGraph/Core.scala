@@ -1,5 +1,4 @@
 package org.canve.simpleGraph
-//import scala.collection.immutable.HashMap
 import collection.mutable.HashMap
 
 /*
@@ -21,9 +20,9 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
    */
   private class UnidirectionalEdgeIndex {
     
-    private val index = new HashMap[ID, Set[Edge]]
+    private[SimpleGraph] val index = new HashMap[ID, Set[Edge]]
 
-    private[SimpleGraph] def iterator = index.iterator
+    //private[SimpleGraph] def iterator = index.iterator
     
     def vertexEdges(id: ID): Option[Set[Edge]] = index.get(id)
     
@@ -67,10 +66,22 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
   def vertexEdges(id: ID): Set[Edge] = {
     edgeIndex.vertexEdges(id).getOrElse(Set()) ++ 
     reverseEdgeIndex.vertexEdges(id).getOrElse(Set())
-  }    
+  } 
+
+  // TODO: test cases, add to abstract class
+  def vertexEdgePeer(id: ID, edge: Edge): ID = {
+    if (id == edge.id1) edge.id2
+    if (id == edge.id2) edge.id1
+    throw SimpleGraphApiException("vertex with id $id is not part of the edge supplied")
+  }
   
-  def vertexIterator: Iterator[(ID, Vertex)]    = vertexIndex.iterator
-  def EdgeIterator:   Iterator[(ID, Set[Edge])] = edgeIndex.iterator
+  // TODO: test cases, add to abstract class, then create efficient version
+  def vertexEdgePeers(id: ID): Set[ID] = {
+    vertexEdges(id).map(edge => vertexEdgePeer(id, edge))
+  }
+  
+  def vertexIterator: Iterator[(ID, Vertex)] = vertexIndex.iterator
+
 }
 
 /*

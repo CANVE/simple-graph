@@ -15,7 +15,7 @@ case class AlgoCacheUnit[ID, VertexCacheUnit <: AbstractVertexCacheUnit, Vertex 
   def apply(id: ID) = vertexCacheIndex.get(id)
 }
 
-abstract class AbstractVertexCacheUnit {
+abstract trait AbstractVertexCacheUnit {
   def apply: AbstractVertexCacheUnit
 }
 
