@@ -70,8 +70,8 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
 
   // TODO: test cases, add to abstract class
   def vertexEdgePeer(id: ID, edge: Edge): ID = {
-    if (id == edge.id1) edge.id2
-    if (id == edge.id2) edge.id1
+    if (id == edge.id1) return edge.id2
+    if (id == edge.id2) return edge.id1
     throw SimpleGraphApiException("vertex with id $id is not part of the edge supplied")
   }
   

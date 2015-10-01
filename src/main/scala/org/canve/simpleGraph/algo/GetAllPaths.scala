@@ -7,7 +7,7 @@ import org.canve.simpleGraph._
  * sorted by path length.
  * 
  * Traverses starting from the origin vertex, visiting each vertex exactly once.
- * Backtracking from the target vertex, it stores a set of the paths reaching the 
+ * Backtracking from the target vertex, it stores a list of the paths reaching the 
  * target vertex in the cache of each vertex being part of such path.
  * 
  */
@@ -23,13 +23,14 @@ case class GetAllPaths[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID
      */
     protected class selfCacheUnit {
       var visited: Boolean = false
-      var successPath: Set[List[ID]] = Set() 
+      var successPath: List[List[ID]] = List() 
     } 
   
     private val cache: Map[ID, selfCacheUnit] = 
       graph.vertexIterator.map(vertex => (vertex._1, new selfCacheUnit)).toMap
 
     private def traverse(self: ID): Boolean = {
+      println(self)
       val selfCache = cache(self)
       
       if (selfCache.visited) 
@@ -37,13 +38,21 @@ case class GetAllPaths[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID
       else 
         selfCache.visited = true
         
-      if (self == target) true   
+      val vertexEdgePeers = graph.vertexEdgePeers(self)
+      println(self + ": " +  vertexEdgePeers)
+        
+      if (self == target) {
+        selfCache.successPath = List(List(self))
+        if (self != origin)
+          return true   
+      }
       
-      selfCache.successPath = graph.vertexEdgePeers(self).flatMap(peer => traverse(peer) match {
-        case true  => cache(peer).successPath ++ cache(peer).successPath
-        case false => List()
+      selfCache.successPath = vertexEdgePeers.toList.flatMap(peer => traverse(peer) match {
+        case true  => cache(peer).successPath.map(peerSuccessPath => List(self) ++ peerSuccessPath)
+        case false => List()        
       })
       
+      println(selfCache.successPath)
       selfCache.successPath.filter(_.nonEmpty).nonEmpty
     }
     
