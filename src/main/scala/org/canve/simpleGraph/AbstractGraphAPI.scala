@@ -16,7 +16,7 @@ abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractE
   
   def vertexEdgePeer(id: ID, edge: Edge): ID
   
-  def vertexIterator: Iterator[(ID, Vertex)] // returns a new iterator every time called
+  def vertexIterator: Iterator[Vertex] // returns a new iterator every time called
   
   def += (inputs: Addable*): AbstractGraph[ID, Vertex, Edge] = {
     inputs.foreach(i => i match {

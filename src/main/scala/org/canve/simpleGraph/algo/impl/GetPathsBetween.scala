@@ -1,6 +1,7 @@
-package org.canve.simpleGraph.algo
+package org.canve.simpleGraph.algo.impl
 
 import org.canve.simpleGraph._
+import org.canve.simpleGraph.algo._
 
 /*
  * Algorithm implementation of finding all paths between two vertices,
@@ -11,7 +12,7 @@ import org.canve.simpleGraph._
  * target vertex in the cache of each vertex being part of such path.
  * 
  */
-case class GetAllPaths[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
+case class GetPathsBetween[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
   (graph: AbstractGraph[ID, Vertex, Edge], 
    origin: ID,
    target: ID) extends GraphAlgo {
@@ -27,15 +28,10 @@ case class GetAllPaths[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID
     } 
   
     private val cache: Map[ID, selfCacheUnit] = 
-      graph.vertexIterator.map(vertex => (vertex._1, new selfCacheUnit)).toMap
-
-    /*  
-    private def vertexEdgesFiltered(id: ID) = {
-      graph.vertexEdgePeers(id).toList
-    }*/
+      graph.vertexIterator.map(vertex => (vertex.id, new selfCacheUnit)).toMap
       
     private def traverse(self: ID): Boolean = {
-      println(self)
+      //println(self)
       val selfCache = cache(self)
       
       if (selfCache.visited) 
@@ -44,7 +40,7 @@ case class GetAllPaths[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID
         selfCache.visited = true
         
       val vertexEdgePeers = graph.vertexEdgePeers(self)
-      println(self + ": " +  vertexEdgePeers)
+      //println(self + ": " +  vertexEdgePeers)
         
       if (self == target) {
         selfCache.successPath = List(List(self))
@@ -57,7 +53,7 @@ case class GetAllPaths[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID
         case false => List()        
       })
       
-      println(selfCache.successPath)
+      //println(selfCache.successPath)
       selfCache.successPath.filter(_.nonEmpty).nonEmpty
     }
     
@@ -79,5 +75,3 @@ case class GetAllPaths[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID
       }     
     }
 }
-
-object Foo { org.canve.simpleGraph.algo.GetAllPaths }

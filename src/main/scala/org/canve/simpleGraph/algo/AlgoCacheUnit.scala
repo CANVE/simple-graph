@@ -1,5 +1,5 @@
-package org.canve.simpleGraph
-import collection.immutable.HashMap
+package org.canve.simpleGraph.algo
+import org.canve.simpleGraph._
 
 /*
  * a cache using type @VertexCache, 
@@ -10,7 +10,7 @@ case class AlgoCacheUnit[ID, VertexCacheUnit <: AbstractVertexCacheUnit, Vertex 
    graph: AbstractGraph[ID, Vertex, Edge]) { 
    
   private val vertexCacheIndex: Map[ID, AbstractVertexCacheUnit] = 
-    graph.vertexIterator.map(vertex => (vertex._1, cacheUnit.apply)).toMap
+    graph.vertexIterator.map(vertex => (vertex.id, cacheUnit.apply)).toMap
   
   def apply(id: ID) = vertexCacheIndex.get(id)
 }

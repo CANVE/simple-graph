@@ -13,6 +13,12 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
   extends AbstractGraph[ID, Vertex, Edge] 
   with FilterableWalk[ID, Vertex, Edge] {
 
+  def this(vertices: Set[Vertex], edges: Set[Edge]) = {
+    this
+    vertices.foreach(this +=)
+    edges.foreach(this +=)
+  }
+  
   private val vertexIndex    = new HashMap[ID, Vertex]   
   protected val edgeIndex      = new UnidirectionalEdgeIndex
   protected val reverseEdgeIndex = new UnidirectionalEdgeIndex 
@@ -80,12 +86,13 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
     vertexEdges(id).map(edge => vertexEdgePeer(id, edge))
   }
   
-  def vertexIterator: Iterator[(ID, Vertex)] = vertexIndex.iterator
+  def vertexIterator: Iterator[Vertex] = vertexIndex.iterator.map(_._2)
 
 }
 
 /*
- * companion object for constructors
+/*
+ * companion object / constructors
  */
 object SimpleGraph {
   
@@ -93,10 +100,11 @@ object SimpleGraph {
   def apply[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
            (vertices: Set[Vertex], edges: Set[Edge]) = {
     
-    val simpleGraph = new SimpleGraph[ID, AbstractVertex[ID], AbstractEdge[ID]]
+    val simpleGraph = new SimpleGraph[ID, Vertex, Edge]
     vertices.foreach(simpleGraph +=)
     edges.foreach(simpleGraph +=)
     simpleGraph
   }
   
 }
+*/

@@ -21,7 +21,7 @@ trait FilterableWalk[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
   * if either argument is not passed, a void (no-filter) filter is substituted for it.
   * 
   * @vertexFilter -    function accepting a vertex and returning true 
-  * 								    if the vertex should pass through
+  * 								   if the vertex should pass through
   * 
   * @directionFilter - direction that should pass through    
   */
@@ -29,6 +29,7 @@ trait FilterableWalk[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
                       vertexFilter: Vertex => Boolean = (v: Vertex) => true,
                       directionFilter: EdgeDirectionAllowed = AnyDirection): Set[Vertex] = {
     
+    // filter by directionality
     val directionFiltered: Set[Edge] = directionFilter match { 
       case AnyDirection =>
         edgeIndex.vertexEdges(id).getOrElse(Set()) ++ 
@@ -39,6 +40,7 @@ trait FilterableWalk[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
         reverseEdgeIndex.vertexEdges(id).getOrElse(Set())        
     }  
     
+    // filter by vertex content
     directionFiltered.map(edge => vertexEdgePeer(id, edge)) // TODO: refactor elsewhere for faster peer access here
                      .map(id => vertex(id).get)   
                      .filter(vertexFilter)
