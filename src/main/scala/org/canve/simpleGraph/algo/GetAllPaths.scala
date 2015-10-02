@@ -29,6 +29,11 @@ case class GetAllPaths[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID
     private val cache: Map[ID, selfCacheUnit] = 
       graph.vertexIterator.map(vertex => (vertex._1, new selfCacheUnit)).toMap
 
+    /*  
+    private def vertexEdgesFiltered(id: ID) = {
+      graph.vertexEdgePeers(id).toList
+    }*/
+      
     private def traverse(self: ID): Boolean = {
       println(self)
       val selfCache = cache(self)

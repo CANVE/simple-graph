@@ -2,27 +2,27 @@ package org.canve.simpleGraph
 import collection.mutable.HashMap
 
 /*
- * implementation of the `AbstractGraph` API
+ * The concrete graph implementation
  * 
  * each edge is indexed in two indexes:
  * one is indexing by the first node,
  * the other by the second, so that all edges touching a node can be retrieved in O(1).
  */
+
 class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]] 
-  extends AbstractGraph[ID, Vertex, Edge] {
+  extends AbstractGraph[ID, Vertex, Edge] 
+  with FilterableWalk[ID, Vertex, Edge] {
 
   private val vertexIndex    = new HashMap[ID, Vertex]   
-  private val edgeIndex      = new UnidirectionalEdgeIndex
-  private val reverseEdgeIndex = new UnidirectionalEdgeIndex 
+  protected val edgeIndex      = new UnidirectionalEdgeIndex
+  protected val reverseEdgeIndex = new UnidirectionalEdgeIndex 
   
   /*
    * Single-direction edge index 
    */
-  private class UnidirectionalEdgeIndex {
+  protected class UnidirectionalEdgeIndex {
     
     private[SimpleGraph] val index = new HashMap[ID, Set[Edge]]
-
-    //private[SimpleGraph] def iterator = index.iterator
     
     def vertexEdges(id: ID): Option[Set[Edge]] = index.get(id)
     
@@ -85,7 +85,7 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
 }
 
 /*
- * companion object / constructors
+ * companion object for constructors
  */
 object SimpleGraph {
   

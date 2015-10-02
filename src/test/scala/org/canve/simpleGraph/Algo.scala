@@ -12,7 +12,7 @@ class Algo {
   val graph = new SimpleGraph [Int, Node, Relation]
 
   graph += (Node(1), Node(2), Node(3), Node(4)) 
-  graph += (Relation(1, 2), Relation(2, 3), Relation(3,1), Relation(1,4), Relation(1,1), Relation(2,2))
+  graph += (Relation(1, 2), Relation(2, 3), Relation(3,1), Relation(1,4), Relation(1,1), Relation(2,2), Relation(3,3))
   
   val allPaths: Option[List[List[Int]]] = new GetAllPaths(graph, 1, 3).run
   assert (allPaths.nonEmpty)
