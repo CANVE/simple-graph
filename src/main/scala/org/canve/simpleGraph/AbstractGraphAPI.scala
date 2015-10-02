@@ -4,7 +4,8 @@ package org.canve.simpleGraph
  * API definition
  */
 abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
-  extends ExtraGraphAPI[ID, Vertex, Edge] {
+  extends ExtraGraphAPI[ID, Vertex, Edge]
+  with FilterableWalk[ID, Vertex, Edge]{
       
   def += (vertex: Vertex): AbstractGraph[ID, Vertex, Edge] 
   
@@ -24,7 +25,7 @@ abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractE
       case e : AbstractEdge[ID]   => += (e.asInstanceOf[Edge])
     })
     this
-  } 
+  }
 }
 
 abstract trait ExtraGraphAPI[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]] {
@@ -32,7 +33,9 @@ abstract trait ExtraGraphAPI[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractE
 
   def vertexEdgePeer(id: ID, edge: Edge): ID 
 
-  def vertexEdgePeers(id: ID): Set[ID] 
+  def vertexEdgePeers(id: ID): Set[ID]
+  
+  def vertexEdgePeersVerbose(id: ID): List[FilterFuncArguments[Vertex, Edge]]
 }
 
 sealed abstract trait Addable

@@ -10,8 +10,7 @@ import collection.mutable.HashMap
  */
 
 class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]] 
-  extends AbstractGraph[ID, Vertex, Edge] 
-  with FilterableWalk[ID, Vertex, Edge] {
+  extends AbstractGraph[ID, Vertex, Edge] {
 
   def this(vertices: Set[Vertex], edges: Set[Edge]) = {
     this
@@ -87,7 +86,15 @@ class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
   }
   
   def vertexIterator: Iterator[Vertex] = vertexIndex.iterator.map(_._2)
-
+  
+  def vertexEdgePeersVerbose(id: ID): List[FilterFuncArguments[Vertex, Edge]] = { 
+    edgeIndex
+      .vertexEdges(id).getOrElse(Set()).toList
+      .map(edge => FilterFuncArguments(Egress, edge, vertex(edge.id2).get)) ++
+    reverseEdgeIndex     
+      .vertexEdges(id).getOrElse(Set()).toList
+      .map(edge => FilterFuncArguments(Ingress, edge, vertex(edge.id1).get))
+  }
 }
 
 /*

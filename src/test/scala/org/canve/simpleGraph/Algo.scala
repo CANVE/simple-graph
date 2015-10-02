@@ -15,13 +15,15 @@ class Algo {
   graph += (Node(1), Node(2), Node(3), Node(4)) 
   graph += (Relation(1, 2), Relation(2, 3), Relation(3,1), Relation(1,4), Relation(1,1), Relation(2,2), Relation(3,3))
   
-  val allPaths: Option[List[List[Int]]] = new GetPathsBetween(graph, 1, 3).run
+  def walkFilter(filterFunc: FilterFuncArguments[Node, Relation]) = true
+  
+  val allPaths: Option[List[List[Int]]] = new GetPathsBetween(graph, walkFilter, 1, 3).run
   assert (allPaths.nonEmpty)
   println(allPaths)
   
   println
   
-  val allPaths1: Option[List[List[Int]]] = new GetPathsBetween(graph, 1, 1).run
+  val allPaths1: Option[List[List[Int]]] = new GetPathsBetween(graph, walkFilter, 1, 1).run
   assert (allPaths1.nonEmpty)
   println(allPaths1)  
 }

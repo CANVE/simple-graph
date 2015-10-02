@@ -14,6 +14,7 @@ import org.canve.simpleGraph.algo._
  */
 case class GetPathsBetween[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
   (graph: AbstractGraph[ID, Vertex, Edge], 
+   filterFunc: FilterFuncArguments[Vertex, Edge] => Boolean, 
    origin: ID,
    target: ID) extends GraphAlgo {
     
@@ -39,7 +40,7 @@ case class GetPathsBetween[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdg
       else 
         selfCache.visited = true
         
-      val vertexEdgePeers = graph.vertexEdgePeers(self)
+      val vertexEdgePeers = graph.vertexEdgePeersFiltered(self, filterFunc)
       //println(self + ": " +  vertexEdgePeers)
         
       if (self == target) {
