@@ -20,21 +20,21 @@ trait FilterableWalk[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
   * @filter - function returning true if the vertex should pass through
   *  
   */
-  def vertexEdgePeers(id: ID, filterFunc: FilterArguments => Boolean): Set[Vertex] = {
+  def vertexEdgePeers(id: ID, filterFunc: FilterFuncArguments => Boolean): Set[Vertex] = {
     
     (edgeIndex
        .vertexEdges(id).getOrElse(Set()).toList
-       .map(edge => FilterArguments(edge, Egress, vertex(edge.id2).get)) ++
+       .map(edge => FilterFuncArguments(Egress, edge, vertex(edge.id2).get)) ++
      reverseEdgeIndex
        .vertexEdges(id).getOrElse(Set()).toList
-       .map(edge => FilterArguments(edge, Ingress, vertex(edge.id1).get)))
+       .map(edge => FilterFuncArguments(Ingress, edge, vertex(edge.id1).get)))
           .filter(filterFunc)
           .map(_.peer)
           .toSet
   } 
   
   /*
-   * a representation encouraging readable `filterFunc` logic implementations
+   * a representation encouraging readable `filterFunc` implementations
    */
-  case class FilterArguments(edge: Edge, direction: EdgeDirectionAllowed, peer: Vertex) 
+  case class FilterFuncArguments(direction: EdgeDirectionAllowed, edge: Edge, peer: Vertex) 
 }
