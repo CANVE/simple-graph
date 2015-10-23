@@ -12,6 +12,10 @@ import collection.mutable.HashMap
 class SimpleGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]] 
   extends AbstractGraph[ID, Vertex, Edge] {
 
+  /*
+   *  a custom constructor (because a companion object won't work 
+   *  for a type parameterized class, so it seemed (http://stackoverflow.com/questions/32910646/custom-and-multiple-constructor-inheritance-in-scala) 
+   */
   def this(vertices: Set[Vertex], edges: Set[Edge]) = {
     this
     vertices.foreach(this +=)

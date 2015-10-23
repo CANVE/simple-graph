@@ -15,7 +15,10 @@ class Algo {
   graph += (Node(1), Node(2), Node(3), Node(4)) 
   graph += (Relation(1, 2), Relation(2, 3), Relation(3,1), Relation(1,4), Relation(1,1), Relation(2,2), Relation(3,3))
   
-  def walkFilter(filterFunc: FilterFuncArguments[Node, Relation]) = true
+  def voidFilter(filterFunc: FilterFuncArguments[Node, Relation]): Boolean = true
+  def walkFilter(filterFunc: FilterFuncArguments[Node, Relation]): Boolean = {
+    filterFunc.direction == Egress
+  }
   
   val allPaths: Option[List[List[Int]]] = new GetPathsBetween(graph, walkFilter, 1, 3).run
   assert (allPaths.nonEmpty)
